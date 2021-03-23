@@ -1,2 +1,7 @@
 TgCrypto
 pyrogram==1.2.4
+pydub
+dataclass_factory
+numpy
+aiohttp
+aiofiles
