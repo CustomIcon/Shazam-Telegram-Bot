@@ -4,6 +4,9 @@ from pyrogram import Client
 from shazam import Shazam
 
 
+shazam = Shazam()
+
+
 class bot(Client):
     def __init__(self, name):
         config_file = f"{name}.ini"
@@ -32,8 +35,7 @@ class bot(Client):
         print("bot stopped. Bye.")
 
     async def recognize(self, path):
-        shazam = Shazam()
         return await shazam.recognize_song(path)
 
     async def related(self, track_id):
-        await shazam.related_tracks(track_id=track_id, limit=50, start_from=2)
+        return (await shazam.related_tracks(track_id=track_id, limit=50, start_from=2))['tracks']

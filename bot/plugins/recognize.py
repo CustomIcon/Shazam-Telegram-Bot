@@ -26,10 +26,10 @@ async def voice_handler(_, message):
     buttons = types.InlineKeyboardMarkup(
         [
             [
-                # types.InlineKeyboardButton(
-                #     '🎼 Related Songs',
-                #     switch_inline_query_current_chat=f'related {r["key"]}',
-                # ),
+                types.InlineKeyboardButton(
+                    '🎼 Related Songs',
+                    switch_inline_query_current_chat=f'related {r["key"]}',
+                ),
                 types.InlineKeyboardButton(
                     '🔗 Share',
                     url=f'{r["share"]["html"]}'
