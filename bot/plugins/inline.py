@@ -27,50 +27,58 @@ async def inline_func(client, query):
             track_id = int(string.split(None, 1)[1])
         except ValueError:
             return
-        for x in (await bot.related(track_id)):
-            try:
-                result = (
-                    x['images']['coverarthq'],
-                    x['images']['coverart'],
-                    x['title'], x['subtitle'],
-                    x['share']['href'],
-                    x['share']['html']
-                )
-            except KeyError:
-                result = (
-                    None,
-                    None,
-                    x['title'],
-                    x['subtitle'],
-                    x['share']['href'],
-                    x['share']['html']
-                )
-            image, thumb, title, artist, link, share = result
-            answers.append(
-                types.InlineQueryResultArticle(
-                    title=title,
-                    description=artist,
-                    thumb_url=thumb,
-                    input_message_content=types.InputTextMessageContent(
-                        f'**Title**: {title}\n**Artist**: {artist}[\u200c\u200c\u200e]({image})'
-                    ),
-                    reply_markup=types.InlineKeyboardMarkup(
-                        [
+        try:
+            for x in (await bot.related(track_id)):
+                try:
+                    result = (
+                        x['images']['coverarthq'],
+                        x['images']['coverart'],
+                        x['title'], x['subtitle'],
+                        x['share']['href'],
+                        x['share']['html']
+                    )
+                except KeyError:
+                    result = (
+                        None,
+                        None,
+                        x['title'],
+                        x['subtitle'],
+                        x['share']['href'],
+                        x['share']['html']
+                    )
+                image, thumb, title, artist, link, share = result
+                answers.append(
+                    types.InlineQueryResultArticle(
+                        title=title,
+                        description=artist,
+                        thumb_url=thumb,
+                        input_message_content=types.InputTextMessageContent(
+                            f'**Title**: {title}\n**Artist**: {artist}[\u200c\u200c\u200e]({image})'
+                        ),
+                        reply_markup=types.InlineKeyboardMarkup(
                             [
-                                types.InlineKeyboardButton(
-                                    '🔗 Share',
-                                    url=f'{share}'
-                                )
-                            ],
-                            [
-                                types.InlineKeyboardButton(
-                                    '🎵 Listen',
-                                    url=f'{link}'
-                                )
+                                [
+                                    types.InlineKeyboardButton(
+                                        '🔗 Share',
+                                        url=f'{share}'
+                                    )
+                                ],
+                                [
+                                    types.InlineKeyboardButton(
+                                        '🎵 Listen',
+                                        url=f'{link}'
+                                    )
+                                ]
                             ]
-                        ]
+                        )
                     )
                 )
+        except TypeError:
+            return await client.answer_inline_query(
+                query.id,
+                results=answers,
+                switch_pm_text='Cannot Find the Song',
+                cache_time=0,
             )
     await client.answer_inline_query(
         query.id,

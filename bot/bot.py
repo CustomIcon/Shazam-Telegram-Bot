@@ -1,7 +1,7 @@
 from os import path
 from configparser import ConfigParser
 from pyrogram import Client
-from shazam import Shazam
+from shazam import Shazam, exceptions
 
 
 shazam = Shazam()
@@ -38,4 +38,7 @@ class bot(Client):
         return await shazam.recognize_song(path)
 
     async def related(self, track_id):
-        return (await shazam.related_tracks(track_id=track_id, limit=50, start_from=2))['tracks']
+        try:
+            return (await shazam.related_tracks(track_id=track_id, limit=50, start_from=2))['tracks']
+        except exceptions.FailedDecodeJson:
+            return None
