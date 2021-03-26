@@ -77,9 +77,49 @@ async def inline_func(client, query):
             return await client.answer_inline_query(
                 query.id,
                 results=answers,
-                switch_pm_text='Cannot Find the Song',
-                cache_time=0,
+                switch_pm_text='cannot find the Song',
+                switch_pm_parameter='help_inline',
             )
+            return
+    elif string.split()[0] == 'artist':
+        if len(string.split()) == 1:
+            await client.answer_inline_query(
+                query.id,
+                results=answers,
+                switch_pm_text='Input Artist Name',
+                switch_pm_parameter='help_inline',
+            )
+            return
+        artists = await bot.get_artist(string.split(None, 1)[1])
+        if artists is None:
+            return await client.answer_inline_query(
+                query.id,
+                results=answers,
+                switch_pm_text='Cannot find the Artist',
+                switch_pm_parameter='help_inline',
+            )
+            return
+        for artist in artists:
+            answers.append(
+                types.InlineQueryResultArticle(
+                        title=artist.name,
+                        description=None,
+                        thumb_url=artist.avatar or None,
+                        input_message_content=types.InputTextMessageContent(
+                            f'**Artist name:**{artist.name} [\u200c\u200c\u200e]({artist.avatar})'
+                        ),
+                        reply_markup=types.InlineKeyboardMarkup(
+                            [
+                                [
+                                    types.InlineKeyboardButton(
+                                        '🔗 More Info',
+                                        url=f'{artist.url}'
+                                    )
+                                ]
+                            ]
+                        )
+                    ) 
+                )
     await client.answer_inline_query(
         query.id,
         results=answers,

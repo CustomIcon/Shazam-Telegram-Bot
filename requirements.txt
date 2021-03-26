@@ -5,3 +5,4 @@ dataclass_factory
 numpy
 aiohttp
 aiofiles
+shazamio
