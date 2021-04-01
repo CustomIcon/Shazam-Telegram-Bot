@@ -40,6 +40,12 @@ async def voice_handler(_, message):
                     '🎵 Listen',
                     url=f'{r["url"]}'
                 )
+            ],
+            [
+                types.InlineKeyboardButton(
+                    f'💿 More Tracks from {r["subtitle"]}',
+                    switch_inline_query_current_chat=f'tracks {r["artists"][0]["id"]}',
+                )
             ]
             
         ]
