@@ -23,8 +23,7 @@ async def voice_handler(_, message):
         return
     out = f'**Title**: `{r["title"]}`\n'
     out += f'**Artist**: `{r["subtitle"]}`\n'
-    buttons = types.InlineKeyboardMarkup(
-        [
+    buttons = [
             [
                 types.InlineKeyboardButton(
                     '🎼 Related Songs',
@@ -40,18 +39,20 @@ async def voice_handler(_, message):
                     '🎵 Listen',
                     url=f'{r["url"]}'
                 )
-            ],
+            ],        
+        ]
+    response = r.get('artists', None)
+    if response:
+        buttons.append(
             [
                 types.InlineKeyboardButton(
                     f'💿 More Tracks from {r["subtitle"]}',
                     switch_inline_query_current_chat=f'tracks {r["artists"][0]["id"]}',
                 )
             ]
-            
-        ]
-    )
+        )
     await message.reply_photo(
         r['images']['coverarthq'],
         caption=out,
-        reply_markup=buttons
+        reply_markup=types.InlineKeyboardMarkup(buttons)
     )
